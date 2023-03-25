@@ -147,6 +147,9 @@ bash: curl: command not found
 ## Docker playground
 https://labs.play-with-docker.com/
 
+### [Click here to view Docker in parctice](README-app.md)
+
+
 ## Docker Learning Resources
 1. Learning Docker - https://youtu.be/3c-iBn73dDE
 2. Series - https://youtu.be/GeqaTjKMWeY
