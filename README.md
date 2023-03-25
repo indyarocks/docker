@@ -3,6 +3,9 @@
 ## Docker Hub:
 https://hub.docker.com/
 
+![alt text](images/operating-system-layers.png "Operating System Layers")
+![alt text](images/docker-vs-VM.png "Docker vs VM")
+
 ## What is container
 1. Layers of images
 2. Mostly Linux Base image, because small in size (usually Alpine)
