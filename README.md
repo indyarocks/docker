@@ -172,6 +172,7 @@ bash: curl: command not found
 
 ## Docker network
 `docker network ls` -> Lists all docker network
+
 Inside isolated docker network, one container can talk to other container with just container name.
 Anything outside docker network, need to connect via a PORT number. 
 
