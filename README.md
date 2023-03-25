@@ -43,8 +43,9 @@ Error: Database is uninitialized and superuser password is not specified.
 11. `docker run -p6000:6379 -d redis` To bind host port 6000 to container port 6379 in detached mode
 12. `docker run -d -p6001:6379 --name redis-6 redis:6` To run redis version 6 in detached mode with host port 6001 and name `redis-6`
 13. `docker exec -it <container-id/container-name> /bin/bash` -> To start `interactive terminal` for a given container id OR name
-14. 
-
+14. `docker network ls` -> List docker networks
+15. `docker network create <network-name>` -> To create isolated docker network
+16. `docker run -p 27017:27017 -d --name <container-name-input> --net <existing-network-name> -e  MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo` -> Starts a container with `cotainer-name-input` inside docker network `existing-network-name` on host port 2707 in detached mode with environment variables `MONGO_INITDB_ROOT_PASSWORD` and `MONGO_INITDB_ROOT_USERNAME` 
 
 ## Docker container PORTS
 ```shell
@@ -142,6 +143,50 @@ root@a68f4e2a458d:/# ls
 bin  boot  data  dev  etc  home  lib  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
 root@a68f4e2a458d:/# curl
 bash: curl: command not found
+
+```
+
+## Docker network
+`docker network ls` -> Lists all docker network
+Inside isolated docker network, one container can talk to other container with just container name.
+Anything outside docker network, need to connect via a PORT number. 
+
+![alt text](images/isolated-docker-network.png "Isolated Docker Network")
+
+`docker network create mongo-network` -> To create isolated docker network
+`docker run -p 27017:27017 -d --name <container-name-input> --net <existing-network-name> -e  MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo` -> Starts a container with `cotainer-name-input` inside docker network `existing-network-name` on host port 2707 in detached mode with environment variables `MONGO_INITDB_ROOT_PASSWORD` and `MONGO_INITDB_ROOT_USERNAME`
+```shell
+chandan@~/Workspace/2023/docker (main) ± ➜ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+515e41cca0f3   bridge    bridge    local
+2553cd094a51   host      host      local
+10220620e69d   none      null      local
+
+chandan@~/Workspace/2023/docker (main) ± ➜ docker network create mongo-network
+6107ddaf1391158eef4a2784495c5bd2fd856cc3653d749fe3611a135662a658
+
+chandan@~/Workspace/2023/docker (main) ± ➜ docker network ls
+NETWORK ID     NAME            DRIVER    SCOPE
+515e41cca0f3   bridge          bridge    local
+2553cd094a51   host            host      local
+6107ddaf1391   mongo-network   bridge    local
+10220620e69d   none            null      local
+chandan@~/Workspace/2023/docker (main) ± ➜ docker run -p 27017:27017  \       
+> -d -e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
+> -e MONGO_INITDB_ROOT_PASSWORD=secret \
+> --name mongodb --net mongo-network \
+> mongo
+64e7ecf3386f20e2479b84f8b646d1e3ebd50eacd4eacb717beb86a668f4a13a
+chandan@~/Workspace/2023/docker (main) ± ➜ docker logs 64e7ecf3386f20e2479b84f8b646d1e3ebd50eacd4eacb717beb86a668f4a13a
+chandan@~/Workspace/2023/docker (main) ± ➜ docker run -d \
+>    --network mongo-network \
+>    --name mongo-express \
+>    -p 8081:8081 \
+>    -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" \
+>    -e ME_CONFIG_MONGODB_ADMINPASSWORD="secret" \
+>    -e ME_CONFIG_MONGODB_SERVER="mongodb" \
+>    mongo-express
+42faee14926233160f7428e5bce3236140dc058e9af1f4b92f0f3dff227a751e
 
 ```
 ## Docker playground
