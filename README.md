@@ -45,7 +45,8 @@ Error: Database is uninitialized and superuser password is not specified.
 13. `docker exec -it <container-id/container-name> /bin/bash` -> To start `interactive terminal` for a given container id OR name
 14. `docker network ls` -> List docker networks
 15. `docker network create <network-name>` -> To create isolated docker network
-16. `docker run -p 27017:27017 -d --name <container-name-input> --net <existing-network-name> -e  MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo` -> Starts a container with `cotainer-name-input` inside docker network `existing-network-name` on host port 2707 in detached mode with environment variables `MONGO_INITDB_ROOT_PASSWORD` and `MONGO_INITDB_ROOT_USERNAME` 
+16. `docker run -p 27017:27017 -d --name <container-name-input> --net <existing-network-name> -e  MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo` -> Starts a container with `cotainer-name-input` inside docker network `existing-network-name` on host port 2707 in detached mode with environment variables `MONGO_INITDB_ROOT_PASSWORD` and `MONGO_INITDB_ROOT_USERNAME`
+17. `docker logs <container-id> -f` -> To stream the logs
 
 ## Docker container PORTS
 ```shell
@@ -99,7 +100,8 @@ Now the host port 6000 is listening to latest redis container. Host port 3000 is
 2. `docker run -d -p --name redis-latest redis:6` Docker run command have few options. It runs the image. However `docker start <container-id>` simply start the container based on the initial configuration given during `docker run`
 
 ## Docker debugging
-`docker exec -it <container-id/container-name> /bin/bash` -> To start `interactive terminal` for a given container id OR name
+1. `docker exec -it <container-id/container-name> /bin/bash` -> To start `interactive terminal` for a given container id OR name
+2. `docker logs <container-id> -f` -> To stream the logs
 ```shell
 chandan@~/Workspace/2023/docker (main) ± ➜ docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                    NAMES
@@ -130,6 +132,28 @@ _=/usr/bin/env
 OLDPWD=/data
 root@a68f4e2a458d:/# exit
 exit
+chandan@~/Workspace/2023/docker (main) ± ➜ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                      NAMES
+42faee149262   mongo-express   "tini -- /docker-ent…"   10 minutes ago   Up 10 minutes   0.0.0.0:8081->8081/tcp     mongo-express
+64e7ecf3386f   mongo           "docker-entrypoint.s…"   22 minutes ago   Up 22 minutes   0.0.0.0:27017->27017/tcp   mongodb
+
+chandan@~/Workspace/2023/docker (main) ± ➜ docker logs 42faee149262 -f
+...
+chandan@~/Workspace/2023/docker (main) ± ➜ docker logs 42faee149262 | tail
+(node:7) [MONGODB DRIVER] Warning: Current Server Discovery and Monitoring engine is deprecated, and will be removed in a future version. To use the new Server Discover and Monitoring engine, pass option { useUnifiedTopology: true } to the MongoClient constructor.
+Server is open to allow connections from anyone (0.0.0.0)
+basicAuth credentials are "admin:pass", it is recommended you change this in your config.js!
+(node:7) DeprecationWarning: collection.count is deprecated, and will be removed in a future version. Use Collection.countDocuments or Collection.estimatedDocumentCount instead
+GET /public/css/bootstrap.min.css 304 0.799 ms - -
+GET /public/css/bootstrap-theme.min.css 304 2.904 ms - -
+GET /public/css/style.css 304 1.798 ms - -
+GET /public/css/codemirror.css 304 1.504 ms - -
+GET /public/css/theme/rubyblue.css 304 1.475 ms - -
+GET /public/codemirror-cd38c6e59d64ef16b149.min.js 304 1.267 ms - -
+GET /public/vendor-d1b820f8a9cf3d5a8c6a.min.js 304 0.926 ms - -
+GET /public/collection-fe2ea09c2dc014cda478.min.js 304 0.616 ms - -
+GET /public/img/mongo-express-logo.png 304 0.578 ms - -
+GET /public/img/gears.gif 304 0.599 ms - -
 
 ```
 Since most of the container images are based on light-weight linux distribution, so we may not have all shell commands
