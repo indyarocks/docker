@@ -47,6 +47,8 @@ Error: Database is uninitialized and superuser password is not specified.
 15. `docker network create <network-name>` -> To create isolated docker network
 16. `docker run -p 27017:27017 -d --name <container-name-input> --net <existing-network-name> -e  MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo` -> Starts a container with `cotainer-name-input` inside docker network `existing-network-name` on host port 2707 in detached mode with environment variables `MONGO_INITDB_ROOT_PASSWORD` and `MONGO_INITDB_ROOT_USERNAME`
 17. `docker logs <container-id> -f` -> To stream the logs
+18. `docker-compose -f mongo.yaml up -d` -> Starts all the containers inside the file(-f) mongo.yaml in detached mode
+19. `docker-compose -f mongo.yaml down` -> Shut down all the containers inside the file mongo.yaml
 
 ## Docker container PORTS
 ```shell
@@ -214,6 +216,28 @@ chandan@~/Workspace/2023/docker (main) ± ➜ docker run -d \
 42faee14926233160f7428e5bce3236140dc058e9af1f4b92f0f3dff227a751e
 
 ```
+
+## Docker compose
+Dockerfile - blueprint for building 
+Docker compose creates a default common network for all the containers configured inside the docker compose file.
+
+1. `docker-compose -f mongo.yaml up` -> Starts all the containers inside the file mongo.yaml
+2. `docker-compose -f mongo.yaml down` -> Shut down all the containers inside the file mongo.yaml
+
+`mongo.yaml`
+```yaml 
+version: '3'
+services:
+  <container-name>:
+    image: <app-image-name>
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+  
+```
+
 ## Docker playground
 https://labs.play-with-docker.com/
 
