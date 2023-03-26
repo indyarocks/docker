@@ -247,4 +247,5 @@ https://labs.play-with-docker.com/
 ## Docker Learning Resources
 1. Learning Docker - https://youtu.be/3c-iBn73dDE
 2. Series - https://youtu.be/GeqaTjKMWeY
+3. Latest video - https://youtu.be/pg19Z8LL06w
 
